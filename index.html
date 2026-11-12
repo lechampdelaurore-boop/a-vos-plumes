@@ -443,6 +443,9 @@ body.jeu .vjeu { flex: 1; min-height: 0; display: flex; flex-direction: column; 
 .kb .acc { background: var(--surface2); }
 .kb .wide { flex-grow: 1.6; }
 .kb .space { flex-grow: 2.6; font: 700 .9rem var(--body); color: var(--muted); }
+/* Touche qui s'éclaire quand on appuie (charte : soleil = focus clavier) */
+.kb .touche.allume { background: var(--sun); color: var(--on-sun); position: relative; z-index: 2; animation: touche-allume .3s ease-out; }
+@keyframes touche-allume { 0% { transform: scale(1.18) translateY(-4px); } 100% { transform: none; } }
 .bas .btn { min-height: 52px; }
 
 /* ---------- Fin, carnet ---------- */
@@ -2627,6 +2630,40 @@ if (typeof module !== 'undefined') module.exports = { TEXTES: TEXTES, ECOLE: ECO
     else if (e.key.length === 1 && /[\p{L}' ’-]/u.test(e.key)) { e.preventDefault(); taper(e.key === '’' ? "'" : e.key.toLowerCase()); }
   });
   document.addEventListener('visibilitychange', function () { if (document.hidden) taire(); });
+
+  /* ---------- Touche qui s'éclaire quand on appuie (écran ou clavier physique) ---------- */
+  // Le clavier peut être redessiné à chaque lettre : on retrouve la touche par son data-k.
+  function toucheVisible(k) {
+    return Array.prototype.find.call(document.querySelectorAll('#kb [data-k]'), function (b) {
+      return b.getAttribute('data-k') === k && b.getClientRects().length;
+    });
+  }
+  function eclaireTouche(b) {
+    if (!b) return;
+    b.classList.remove('allume'); void b.offsetWidth; b.classList.add('allume');
+    clearTimeout(b._allume);
+    b._allume = setTimeout(function () { b.classList.remove('allume'); }, 300);
+  }
+  var toucheAppuyee = null;
+  document.addEventListener('pointerdown', function (e) {
+    var b = e.target.closest && e.target.closest('#kb [data-k]');
+    toucheAppuyee = b;
+    if (b && !b.disabled) eclaireTouche(b);
+  });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('#kb [data-k]'), k = b ? b.getAttribute('data-k') : null;
+    if (k == null && toucheAppuyee && !toucheAppuyee.isConnected) k = toucheAppuyee.getAttribute('data-k');
+    if (k == null) return;
+    // Clic au clavier (Entrée sur la touche) ou touche redessinée : on rallume la bonne.
+    var v = toucheVisible(k);
+    if (v && v !== toucheAppuyee) eclaireTouche(v);
+    toucheAppuyee = null;
+  });
+  document.addEventListener('keydown', function (e) {
+    if (!e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+    var k = e.key === 'Backspace' ? 'del' : e.key === '’' ? "'" : e.key.length === 1 ? e.key.toLowerCase() : null;
+    if (k != null) eclaireTouche(toucheVisible(k));
+  });
 
   /* ---------- Démarrage ---------- */
   appliquerPrefs();
