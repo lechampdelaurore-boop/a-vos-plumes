@@ -230,9 +230,12 @@ async function jouerSerie(page, faux = () => false) {
     const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await page.goto('https://lechampdelaurore-boop.github.io/?nocache=' + Date.now());
     let ok = false;
-    try { await page.waitForSelector('a[href*="a-vos-plumes"]', { timeout: 30000 }); ok = true; } catch (e) { /* pas trouvée */ }
+    // Les thèmes de l'accueil sont repliés au départ : le lien existe sans être visible.
+    try { await page.waitForSelector('a[href*="a-vos-plumes"]', { state: 'attached', timeout: 30000 }); ok = true; } catch (e) { /* pas trouvée */ }
+    const theme = ok ? await page.evaluate(() => { const u = document.querySelector('a[href*="a-vos-plumes"]').closest('ul'); return u ? u.id : ''; }) : '';
+    if (ok) await page.evaluate(() => { const u = document.querySelector('a[href*="a-vos-plumes"]').closest('ul'); if (u) u.hidden = false; });
     await page.screenshot({ path: 'captures/mes-applis.png', fullPage: true });
-    note(ok, 'L\'appli apparaît sur « Mes applis »');
+    note(ok && theme === 'liste-ecrire', `L'appli apparaît sur « Mes applis »${theme ? ' (thème ' + theme.replace('liste-', '') + ')' : ''}`);
     await page.close();
   }
 
