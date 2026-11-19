@@ -10,7 +10,7 @@ De **vraies dictées de phrases** pour le CM2, sur téléphone ou tablette, 5 à
 - **Correction mot à mot** : on compte les mots justes, la lettre fausse est marquée, le type d'erreur et une phrase qui explique.
 - Les mots ratés se **réécrivent de mémoire** (regarder, cacher, écrire, comparer), et **la phrase ratée revient** le lendemain, puis 3 jours et 7 jours après.
 
-Tout reste sur l'appareil (rien n'est envoyé sur Internet). L'appli marche hors ligne et s'installe sur l'écran d'accueil.
+Les progrès restent sur l'appareil. Seul un compteur de visites anonyme (GoatCounter) compte les ouvertures de l'appli : pas de cookie, pas de nom, rien sur les progrès. L'appli marche hors ligne et s'installe sur l'écran d'accueil.
 
 ## Les textes
 

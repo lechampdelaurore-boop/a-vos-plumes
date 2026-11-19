@@ -73,4 +73,4 @@ Lien en bas de l'accueil :
 
 ## Vie privée
 
-Tout reste dans le navigateur de l'appareil : pas de compte, rien n'est envoyé sur internet, pas de micro. Effacer les données du site dans le navigateur efface les progrès.
+Tout reste dans le navigateur de l'appareil : pas de compte, rien sur les progrès n'est envoyé sur internet, pas de micro. Un compteur de visites anonyme (GoatCounter) compte seulement les ouvertures de l'appli, sans cookie ni nom. Effacer les données du site dans le navigateur efface les progrès.
